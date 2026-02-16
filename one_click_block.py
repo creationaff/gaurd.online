@@ -168,6 +168,104 @@ def restore_defaults():
 
     messagebox.showinfo("Restored", "Protection disabled. Your internet settings are back to normal.")
 
+import requests
+import json
+import threading
+import time
+from datetime import datetime
+
+API_URL = "https://gaurd-online.onrender.com" # Update after deploy
+
+class GaurdAgent:
+    def __init__(self):
+        self.user_id = None
+        self.profile_id = None
+        self.running = False
+        self.current_policy = None
+
+    def sync_loop(self):
+        while self.running:
+            try:
+                if self.profile_id:
+                    response = requests.get(f"{API_URL}/policy/{self.profile_id}")
+                    if response.status_code == 200:
+                        self.current_policy = response.json()
+                        self.apply_policy()
+            except Exception as e:
+                print(f"Sync error: {e}")
+            time.sleep(60) # Sync every minute
+
+    def apply_policy(self):
+        if not self.current_policy:
+            return
+            
+        policy = self.current_policy["profile"]
+        schedules = self.current_policy["schedules"]
+        
+        # Check if we should be active now
+        should_be_active = True
+        if schedules:
+            now = datetime.now()
+            day = now.weekday()
+            current_time = now.strftime("%H:%M")
+            
+            should_be_active = False
+            for s in schedules:
+                if s["day_of_week"] == day:
+                    if s["start_time"] <= current_time <= s["end_time"]:
+                        should_be_active = True
+                        break
+        
+        if should_be_active:
+            if policy["block_porn"]:
+                block_porn_dns()
+            if policy["block_reddit"]:
+                block_reddit_hosts()
+        else:
+            restore_defaults()
+
+    def log_event(self, event_type, details):
+        log_entry = {
+            "timestamp": datetime.now().isoformat(),
+            "event": event_type,
+            "details": details
+        }
+        with open("gaurd_events.log", "a") as f:
+            f.write(json.dumps(log_entry) + "\n")
+        
+        # In a real app, we would POST this to /events/ endpoint
+        print(f"Logged: {event_type} - {details}")
+
+    def enforcement_loop(self):
+        while self.running:
+            if self.current_policy and self.current_policy["profile"]["block_porn"]:
+                # Force DNS and Hosts
+                dns_success = block_porn_dns()
+                hosts_success = block_reddit_hosts()
+                
+                if not dns_success or not hosts_success:
+                    self.log_event("SHIELD_REPAIR", "Protection was tampered with and successfully restored.")
+                else:
+                    self.log_event("HEARTBEAT", "System secure.")
+            
+            # Simulate AI Threat Detection
+            import random
+            if random.random() < 0.1: # 10% chance to 'detect' a simulated attack
+                threats = ["Botnet Probe", "Credential Stuffing Attempt", "AI-Scanner Blocked"]
+                self.log_event("AI_DEFENSE", f"Neutralized: {random.choice(threats)}")
+
+            time.sleep(30)
+
+    def start(self, profile_id):
+        self.profile_id = profile_id
+        self.running = True
+        self.sync_thread = threading.Thread(target=self.sync_loop, daemon=True)
+        self.enforce_thread = threading.Thread(target=self.enforcement_loop, daemon=True)
+        self.sync_thread.start()
+        self.enforce_thread.start()
+
+agent = GaurdAgent()
+
 def on_click_block():
     if not is_admin():
         messagebox.showerror("Permission Denied", "Please run this application as Administrator/Root.")

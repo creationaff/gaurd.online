@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaurd Dashboard</title>
+    <style>
+        body { font-family: sans-serif; background: #0b1220; color: #fff; margin: 0; display: flex; }
+        .sidebar { width: 250px; background: rgba(255,255,255,0.05); height: 100vh; padding: 20px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .main { flex: 1; padding: 40px; }
+        .card { background: rgba(255,255,255,0.07); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .btn { background: #35d07f; color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .profile-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        h1 { margin-top: 0; }
+        .tag { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Gaurd.online</h2>
+        <p>Dashboard</p>
+        <hr opacity="0.1">
+        <p>Profiles</p>
+        <p>Reports</p>
+        <p>Router Setup</p>
+        <p>Account</p>
+    </div>
+    <div class="main">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Welcome back, James</h1>
+            <div style="text-align: right;">
+                <span class="tag" style="background: #35d07f; color: #000;">NET SECURE</span>
+                <p style="font-size: 0.8rem; margin: 4px 0;">Subscription: Active ($10/mo)</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+            <div class="card">
+                <h3>Live Protection Feed</h3>
+                <div id="feed" style="font-family: monospace; font-size: 0.9rem; color: #35d07f; height: 150px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                    <div>[12:05:01] HEARTBEAT: iMac-Office - Secure</div>
+                    <div>[12:04:30] AI_DEFENSE: Blocked automated botnet probe from IP 192.x.x.x</div>
+                    <div>[12:03:15] SHIELD_REPAIR: Tamper attempt detected on MacBook-Air. Restored hosts file.</div>
+                    <div>[12:02:01] HEARTBEAT: iPhone-15 - Secure (via Router)</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>System Status</h3>
+                <p>Devices: <span style="float: right;">12 Active</span></p>
+                <p>DNS Provider: <span style="float: right; color: #35d07f;">Cloudflare Family</span></p>
+                <p>AI Shield: <span style="float: right; color: #35d07f;">Ultra-High</span></p>
+                <button class="btn" style="width: 100%; margin-top: 10px;">Update Firmware</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Guided Router AI Defense</h3>
+            <p>Pick your router to get specific instructions:</p>
+            <select style="padding: 8px; border-radius: 4px;">
+                <option>Netgear</option>
+                <option>TP-Link</option>
+                <option>ASUS</option>
+                <option>Linksys</option>
+            </select>
+            <button class="btn" style="margin-left: 10px;">Get Guide</button>
+        </div>
+
+        <h2>Family Profiles</h2>
+        <div class="profile-list">
+            <div class="card">
+                <h3>Kids Profile <span class="tag">ACTIVE</span></h3>
+                <p>• Porn: Blocked</p>
+                <p>• Reddit: Blocked</p>
+                <p>• Schedule: 8 AM - 9 PM</p>
+                <button class="btn">Edit Profile</button>
+            </div>
+            <div class="card">
+                <h3>Guest Profile</h3>
+                <p>• Porn: Blocked</p>
+                <p>• Reddit: Allowed</p>
+                <p>• Schedule: Always On</p>
+                <button class="btn">Edit Profile</button>
+            </div>
+            <div class="card" style="display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(255,255,255,0.2);">
+                <p>+ Add New Profile</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
