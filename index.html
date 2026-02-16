@@ -519,6 +519,25 @@
             border-bottom: 1px dotted rgba(234,240,255,0.35);
         }
 
+        .locked-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(11, 18, 32, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            text-align: center;
+            padding: 20px;
+            border: 1px dashed var(--cardBorder);
+        }
+        .download-container {
+            position: relative;
+        }
+
         @media (max-width: 880px) {
             .card { grid-column: span 12; }
             .two-col { grid-template-columns: 1fr; }
@@ -795,51 +814,79 @@
             <h2>Download the app</h2>
             <div class="section-lead">
                 The website can’t change router/DNS settings (browsers don’t allow it). The desktop app can, after you approve it.
-                These download links work when this site is hosted as a static site.
             </div>
-            <div class="two-col">
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-num">⬇️</div>
-                        <div>
-                            <div class="step-title">Download</div>
-                            <div class="step-body">
-                                <a class="btn btn-primary" style="margin-right: 10px;" href="one_click_block.py" download>Download App (Python)</a>
-                                <a class="btn btn-ghost" href="run_blocker.sh" download>Mac/Linux Launcher</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-num">🟢</div>
-                        <div>
-                            <div class="step-title">Turn on protection</div>
-                            <div class="step-body">
-                                Click <b>TURN ON PROTECTION</b> in the app and approve admin permission when prompted.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-num">✅</div>
-                        <div>
-                            <div class="step-title">Verify it worked</div>
-                            <div class="step-body">
-                                Try visiting an adult site (it should fail to load) and try <b>reddit.com</b> (blocked on the computer running the app).
-                            </div>
-                        </div>
-                    </div>
+            
+            <div class="download-container">
+                <!-- Locked Overlay -->
+                <div id="download-lock" class="locked-overlay">
+                    <div class="icon" style="font-size: 3rem;">🔒</div>
+                    <h3 style="margin: 10px 0;">Subscription Required</h3>
+                    <p style="color: var(--muted); max-width: 300px; margin-bottom: 20px;">
+                        Please subscribe to Gaurd Unlimited to unlock the desktop app and guided setup.
+                    </p>
+                    <a class="btn btn-primary" href="https://buy.stripe.com/fZu5kDaS6dGQ2R6dydfbq00">Subscribe for $10/mo</a>
+                    <button class="btn btn-ghost" style="margin-top: 10px; font-size: 0.8rem;" onclick="unlockDemo()">Already a member? Log in</button>
                 </div>
 
-                <div class="note" style="border-color: rgba(74,163,255,0.28); background: rgba(74,163,255,0.10);">
-                    <div style="font-weight: 900; margin-bottom: 8px;">Network-wide protection</div>
-                    To protect <b>every</b> device on your Wi‑Fi, set your router DNS to:
-                    <br><br>
-                    <b>Primary:</b> 1.1.1.3<br>
-                    <b>Secondary:</b> 1.0.0.3
-                    <br><br>
-                    This is what makes it “unlimited devices” (because the router applies it to the whole network).
+                <div class="two-col" style="opacity: 0.3; pointer-events: none; filter: blur(2px);">
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-num">⬇️</div>
+                            <div>
+                                <div class="step-title">Download</div>
+                                <div class="step-body">
+                                    <a class="btn btn-primary" style="margin-right: 10px;" href="one_click_block.py" download>Download App (Python)</a>
+                                    <a class="btn btn-ghost" href="run_blocker.sh" download>Mac/Linux Launcher</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">🟢</div>
+                            <div>
+                                <div class="step-title">Turn on protection</div>
+                                <div class="step-body">
+                                    Click <b>TURN ON PROTECTION</b> in the app and approve admin permission when prompted.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">✅</div>
+                            <div>
+                                <div class="step-title">Verify it worked</div>
+                                <div class="step-body">
+                                    Try visiting an adult site (it should fail to load) and try <b>reddit.com</b> (blocked on the computer running the app).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="note" style="border-color: rgba(74,163,255,0.28); background: rgba(74,163,255,0.10);">
+                        <div style="font-weight: 900; margin-bottom: 8px;">Network-wide protection</div>
+                        To protect <b>every</b> device on your Wi‑Fi, set your router DNS to:
+                        <br><br>
+                        <b>Primary:</b> 1.1.1.3<br>
+                        <b>Secondary:</b> 1.0.0.3
+                        <br><br>
+                        This is what makes it “unlimited devices” (because the router applies it to the whole network).
+                    </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            function unlockDemo() {
+                // In a real app, this would check a cookie or token
+                document.getElementById('download-lock').style.display = 'none';
+                document.querySelector('.download-container .two-col').style.opacity = '1';
+                document.querySelector('.download-container .two-col').style.pointerEvents = 'auto';
+                document.querySelector('.download-container .two-col').style.filter = 'none';
+            }
+
+            // Check if user just paid (simulated via URL)
+            if (window.location.search.includes('paid=true')) {
+                unlockDemo();
+            }
+        </script>
 
         <div id="faq" class="section">
             <h2>FAQ</h2>
