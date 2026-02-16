@@ -67,6 +67,21 @@ def get_active_interface_name_mac():
         pass
     return "Wi-Fi"
 
+def get_windows_interface():
+    try:
+        # Get the interface name that has the default gateway
+        output = subprocess.check_output('netsh interface ip show config', shell=True).decode()
+        # Look for the section that has a Default Gateway
+        sections = output.split("Configuration for interface")
+        for section in sections:
+            if "Default Gateway" in section and "0.0.0.0" not in section:
+                # Extract the interface name from the first line
+                name = section.split("\n")[0].strip().strip('"')
+                return name
+    except:
+        pass
+    return "Wi-Fi" # Fallback
+
 def block_porn_dns():
     # Cloudflare Family DNS (Blocks Malware, Porn, & Known Threats)
     # Primary: 1.1.1.3 (Malware + Porn Blocking)
@@ -84,15 +99,14 @@ def block_porn_dns():
             
         elif system == "Linux":
             # Modify /etc/resolv.conf (temporary) or use nmcli
-            # This is tricky without knowing the distro/network manager
-            # Let's try writing to /etc/resolv.conf directly as a fallback
             with open("/etc/resolv.conf", "w") as f:
                 f.write(f"nameserver {primary_dns}\nnameserver {secondary_dns}\n")
                 
         elif system == "Windows":
-            # netsh interface ip set dns "Wi-Fi" static 1.1.1.3
-            subprocess.run(f'netsh interface ip set dns "Wi-Fi" static {primary_dns}', shell=True)
-            subprocess.run(f'netsh interface ip add dns "Wi-Fi" {secondary_dns} index=2', shell=True)
+            interface = get_windows_interface()
+            print(f"Setting DNS for {interface}...")
+            subprocess.run(f'netsh interface ip set dns "{interface}" static {primary_dns}', shell=True)
+            subprocess.run(f'netsh interface ip add dns "{interface}" {secondary_dns} index=2', shell=True)
             
         return True
     except Exception as e:
@@ -160,7 +174,8 @@ def restore_defaults():
             subprocess.run(["dscacheutil", "-flushcache"], check=False)
         elif system == "Windows":
              # Reset DNS to DHCP
-            subprocess.run('netsh interface ip set dns "Wi-Fi" dhcp', shell=True)
+            interface = get_windows_interface()
+            subprocess.run(f'netsh interface ip set dns "{interface}" dhcp', shell=True)
             # Remove any specific secondary if it exists
             # (The above command usually clears both, but safe to be sure)
     except Exception as e:
@@ -184,13 +199,20 @@ class GaurdAgent:
         self.current_policy = None
 
     def sync_loop(self):
+        print("Starting sync loop...")
         while self.running:
             try:
                 if self.profile_id:
-                    response = requests.get(f"{API_URL}/policy/{self.profile_id}")
+                    print(f"Syncing policy for profile {self.profile_id}...")
+                    response = requests.get(f"{API_URL}/policy/{self.profile_id}", timeout=10)
                     if response.status_code == 200:
                         self.current_policy = response.json()
                         self.apply_policy()
+                        print("Policy synced successfully.")
+                    else:
+                        print(f"Server returned error: {response.status_code}")
+            except requests.exceptions.RequestException as e:
+                print(f"Connection error: Could not reach server at {API_URL}. Retrying...")
             except Exception as e:
                 print(f"Sync error: {e}")
             time.sleep(60) # Sync every minute
@@ -289,8 +311,10 @@ def on_click_block():
     messagebox.showinfo("Family Shield", msg)
 
     # Attempt to open router page
-    import webbrowser
-    webbrowser.open(f"http://{router_ip}")
+    if router_ip and router_ip != "127.0.0.1":
+        import webbrowser
+        print(f"Opening router setup page at http://{router_ip}")
+        webbrowser.open(f"http://{router_ip}")
 
 def restore_block():
     if not is_admin():

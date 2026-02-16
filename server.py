@@ -1,17 +1,47 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from pydantic import BaseModel
 from typing import List, Optional
 import datetime
 import sqlite3
 import uvicorn
+import secrets
+import os
 
 app = FastAPI(title="Gaurd API")
 
+# Stripe Config (Add your real secret key here)
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "sk_test_51...")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "whsec_...")
+
 # Simple SQLite setup
 def get_db():
-    db = sqlite3.connect("gaurd.db")
+    # Use absolute path if on Render to avoid issues
+    db_path = os.path.join(os.getcwd(), "gaurd.db")
+    db = sqlite3.connect(db_path)
     db.row_factory = sqlite3.Row
     return db
+
+@app.post("/stripe-webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    # In a real app, verify the signature with stripe library
+    # For now, we'll parse the JSON
+    import json
+    try:
+        data = json.loads(payload)
+        if data["type"] == "checkout.session.completed":
+            session = data["data"]["object"]
+            email = session.get("customer_details", {}).get("email")
+            if email:
+                db = get_db()
+                # Mark as paid or create user if doesn't exist
+                db.execute("UPDATE users SET is_paid = 1 WHERE email = ?", (email,))
+                db.commit()
+                print(f"Payment success for {email}")
+        return {"status": "success"}
+    except Exception as e:
+        print(f"Webhook error: {e}")
+        return {"status": "error"}
 
 def init_db():
     db = get_db()
@@ -19,7 +49,9 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE,
-            password TEXT
+            password TEXT,
+            is_paid BOOLEAN DEFAULT FALSE,
+            token TEXT
         )
     """)
     db.execute("""
@@ -63,15 +95,37 @@ class ScheduleCreate(BaseModel):
     start_time: str
     end_time: str
 
-@app.post("/signup")
-def signup(user: UserCreate):
+import secrets
+
+@app.post("/login")
+def login(user: UserCreate):
     db = get_db()
-    try:
-        db.execute("INSERT INTO users (email, password) VALUES (?, ?)", (user.email, user.password))
-        db.commit()
-        return {"message": "User created successfully"}
-    except sqlite3.IntegrityError:
-        raise HTTPException(status_code=400, detail="Email already exists")
+    row = db.execute("SELECT * FROM users WHERE email = ? AND password = ?", (user.email, user.password)).fetchone()
+    if not row:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Generate a "Key" for the browser to remember
+    token = secrets.token_hex(32)
+    db.execute("UPDATE users SET token = ? WHERE id = ?", (token, row["id"]))
+    db.commit()
+    
+    return {
+        "token": token,
+        "is_paid": bool(row["is_paid"]),
+        "email": row["email"]
+    }
+
+@app.get("/check-auth")
+def check_auth(token: str):
+    db = get_db()
+    row = db.execute("SELECT * FROM users WHERE token = ?", (token,)).fetchone()
+    if not row:
+        return {"authenticated": False}
+    return {
+        "authenticated": True,
+        "is_paid": bool(row["is_paid"]),
+        "email": row["email"]
+    }
 
 @app.get("/profiles/{user_id}")
 def get_profiles(user_id: int):

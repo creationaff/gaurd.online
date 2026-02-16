@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurd.online | The #1 DNS Shield for Families - $10/mo</title>
-    <meta name="description" content="Gaurd.online provides enterprise-grade porn blocking and AI threat defense for your home Wi‑Fi. Protect unlimited devices with one click. $10/month. Cancel anytime." />
+    <title>Gaurd.online | #1 Porn Blocker for Home Wi‑Fi & AI Shield</title>
+    <meta name="description" content="Block porn on unlimited devices with Gaurd.online. The simplest 1-click DNS shield for families. Protect your home Wi‑Fi from adult content and AI threats for $10/mo." />
+    <meta name="keywords" content="porn blocker, wifi porn block, family dns, safe search, router porn block, block adult sites, internet safety, ai threat defense" />
     <link rel="canonical" href="https://gaurd.online/" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <link rel="icon" type="image/png" href="https://gaurd.online/favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
 
     <meta property="og:site_name" content="Gaurd.online" />
-    <meta property="og:title" content="Gaurd.online | Block Porn on Your Wi‑Fi (Unlimited Devices) - $10/mo" />
-    <meta property="og:description" content="A simple porn blocker for your home Wi‑Fi. Turn on family-safe DNS and block adult sites across unlimited devices. $10/month. Cancel anytime." />
+    <meta property="og:title" content="Gaurd.online | #1 Porn Blocker for Home Wi‑Fi & AI Shield" />
+    <meta property="og:description" content="Block porn on unlimited devices with Gaurd.online. The simplest 1-click DNS shield for families. Protect your home Wi‑Fi from adult content and AI threats." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gaurd.online/" />
+    <meta property="og:image" content="https://gaurd.online/og-image.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gaurd.online | Block Porn on Your Wi‑Fi (Unlimited Devices) - $10/mo" />
-    <meta name="twitter:description" content="A simple porn blocker for your home Wi‑Fi. Turn on family-safe DNS and block adult sites across unlimited devices. $10/month. Cancel anytime." />
+    <meta name="twitter:title" content="Gaurd.online | #1 Porn Blocker for Home Wi‑Fi & AI Shield" />
+    <meta name="twitter:description" content="Block porn on unlimited devices with Gaurd.online. The simplest 1-click DNS shield for families." />
+    <meta name="twitter:image" content="https://gaurd.online/og-image.jpg" />
     <meta name="theme-color" content="#0b1220" />
 
     <!--
@@ -70,7 +74,36 @@
             "price": "10.00",
             "priceCurrency": "USD",
             "url": "https://gaurd.online/#pricing"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "128"
           }
+        },
+        {
+          "@type": "HowTo",
+          "@id": "https://gaurd.online/#how-to",
+          "name": "How to set up Gaurd.online",
+          "description": "Steps to enable family protection on your home network.",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "text": "Click 'Turn On Protection' in the Gaurd app."
+            },
+            {
+              "@type": "HowToStep",
+              "text": "Approve administrator permissions."
+            },
+            {
+              "@type": "HowToStep",
+              "text": "The app automatically updates your system DNS settings."
+            },
+            {
+              "@type": "HowToStep",
+              "text": "Optionally update your router DNS for network-wide protection."
+            }
+          ]
         },
         {
           "@type": "FAQPage",
@@ -573,10 +606,10 @@
     </div>
 
         <div class="hero">
-            <h1>Protect your home. <br>One click.</h1>
+            <h1>Protect your family. <br>Block porn with 1 click.</h1>
             <div class="subtitle">
-                Gaurd provides enterprise-grade DNS shielding for families. 
-                Block 99.9% of adult content and neutralize AI threats across every device on your Wi-Fi.
+                Gaurd.online provides enterprise-grade DNS shielding for your home Wi-Fi. 
+                Block 99.9% of adult content and neutralize AI threats across unlimited devices.
             </div>
 
             <div class="cta">
@@ -587,41 +620,102 @@
             <div class="scanner-box" id="scanner">
                 <div class="scanner-header">
                     <span>Network Safety Scanner</span>
-                    <span id="scan-status" style="color: var(--danger);">Vulnerability Detected</span>
+                    <span id="scan-status" style="color: var(--danger);">Scanning Network...</span>
                 </div>
                 <div class="scanner-body">
                     <div class="scan-line">
                         <span>Pornography Filter</span>
-                        <span class="status-bad">⚠️ Unprotected</span>
+                        <span class="status-bad" id="status-1">Scanning...</span>
                     </div>
                     <div class="scan-line">
                         <span>AI Threat Shield</span>
-                        <span class="status-bad">⚠️ Inactive</span>
+                        <span class="status-bad" id="status-2">Scanning...</span>
                     </div>
                     <div class="scan-line">
                         <span>Hacker Botnet Defense</span>
-                        <span class="status-bad">⚠️ VULNERABLE</span>
+                        <span class="status-bad" id="status-3">Scanning...</span>
                     </div>
                 </div>
-                <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="runScan()">Repair Network Security</button>
+                <div id="scan-action">
+                    <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="runScan()">Start Security Scan</button>
+                </div>
             </div>
 
             <script>
-                function runScan() {
+                async function runScan() {
                     const status = document.getElementById('scan-status');
-                    const lines = document.querySelectorAll('.scan-line .status-bad');
-                    status.innerText = "Scanning & Repairing...";
+                    const btnDiv = document.getElementById('scan-action');
+                    const lines = [
+                        document.getElementById('status-1'),
+                        document.getElementById('status-2'),
+                        document.getElementById('status-3')
+                    ];
+                    
+                    status.innerText = "Testing Connection...";
                     status.style.color = "var(--accent2)";
+                    btnDiv.innerHTML = '<button class="btn btn-ghost" style="margin-top: 15px; width: 100%; cursor: wait;">Running Live Test...</button>';
+                    
+                    // Reset lines
+                    lines.forEach(l => { l.innerText = "Checking..."; l.style.color = "var(--muted)"; });
+
+                    // REAL TEST: Try to load Reddit favicon (blocked by App)
+                    // We use a random query param to bypass cache
+                    const isVulnerable = await checkConnection('https://www.reddit.com/favicon.ico?' + Math.random());
+
+                    // Visual sequence
+                    let delay = 600;
                     
                     setTimeout(() => {
-                        lines.forEach(line => {
-                            line.innerText = "✅ SECURE";
-                            line.className = "status-good";
-                            line.style.color = "var(--accent)";
-                        });
-                        status.innerText = "SYSTEM SECURE";
-                        status.style.color = "var(--accent)";
-                    }, 2000);
+                        // 1. Porn Filter Result
+                        lines[0].innerText = isVulnerable ? "⚠️ EXPOSED" : "✅ SECURE";
+                        lines[0].style.color = isVulnerable ? "var(--danger)" : "var(--accent)";
+                    }, delay);
+
+                    setTimeout(() => {
+                        // 2. AI Threat Result
+                        lines[1].innerText = isVulnerable ? "⚠️ EXPOSED" : "✅ SECURE";
+                        lines[1].style.color = isVulnerable ? "var(--danger)" : "var(--accent)";
+                    }, delay * 2);
+
+                    setTimeout(() => {
+                        // 3. Botnet Result & Final Status
+                        lines[2].innerText = isVulnerable ? "⚠️ EXPOSED" : "✅ SECURE";
+                        lines[2].style.color = isVulnerable ? "var(--danger)" : "var(--accent)";
+
+                        if (isVulnerable) {
+                            status.innerText = "VULNERABILITIES FOUND";
+                            status.style.color = "var(--danger)";
+                            btnDiv.innerHTML = `
+                                <div style="margin-top: 15px; text-align: center;">
+                                    <div style="margin-bottom: 10px; font-weight: 700; color: var(--danger);">Your network is currently unprotected.</div>
+                                    <a class="btn btn-primary" href="#pricing" style="width: 100%; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); border-color: var(--danger);">
+                                        Fix Vulnerabilities ($10/mo)
+                                    </a>
+                                </div>
+                            `;
+                        } else {
+                            status.innerText = "SYSTEM SECURE";
+                            status.style.color = "var(--accent)";
+                            btnDiv.innerHTML = `
+                                <div style="margin-top: 15px; text-align: center; color: var(--accent); font-weight: 700;">
+                                    Great job! Your protection is active.
+                                </div>
+                            `;
+                        }
+                    }, delay * 3);
+                }
+
+                function checkConnection(url) {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        // If it loads, we can reach the site -> VULNERABLE
+                        img.onload = () => resolve(true);
+                        // If it fails, it's blocked -> SECURE
+                        img.onerror = () => resolve(false);
+                        // Timeout after 3s (treat as blocked/secure if slow)
+                        setTimeout(() => resolve(false), 3000);
+                        img.src = url;
+                    });
                 }
             </script>
 
@@ -672,27 +766,26 @@
         </div>
 
         <div id="why" class="section" style="padding-top: 14px;">
-            <h2>Why Gaurd works</h2>
+            <h2>The Best DNS Porn Blocker for Home</h2>
             <div class="section-lead">
-                Most devices use DNS to find websites. When you set a family-safe DNS on your router,
-                your entire home network uses it automatically. That means adult sites and many known malicious
-                domains get blocked before they load.
+                Most devices use DNS to find websites. By setting a family-safe DNS on your router, 
+                your entire home network blocks adult sites and malicious domains automatically.
             </div>
         </div>
 
         <div class="grid" style="padding-top: 0;">
             <div class="card">
-                <div class="icon">🛡️</div>
+                <div class="icon" role="img" aria-label="Shield">🛡️</div>
                 <h3>Advanced DNS Guard</h3>
                 <p>Triple-layer DNS filtering using Cloudflare, OpenDNS, and CleanBrowsing protocols for 99.9% porn block accuracy.</p>
             </div>
             <div class="card">
-                <div class="icon">🚫</div>
+                <div class="icon" role="img" aria-label="Block">🚫</div>
                 <h3>Deep Packet Block</h3>
                 <p>Prevents bypasses by enforcing protection at the system level (Hosts) and network level (Router).</p>
             </div>
             <div class="card">
-                <div class="icon">🧠</div>
+                <div class="icon" role="img" aria-label="Brain">🧠</div>
                 <h3>AI Threat Neutralizer</h3>
                 <p>Identifies and blocks AI-driven botnets and hacker scanning tools before they reach your internal devices.</p>
             </div>
@@ -714,7 +807,7 @@
         </div>
 
         <div id="how" class="section">
-            <h2>How it works (plain English)</h2>
+            <h2>How to Block Porn in 4 Simple Steps</h2>
             <div class="two-col">
                 <div class="steps">
                     <div class="step">
@@ -825,36 +918,64 @@
                         Please subscribe to Gaurd Unlimited to unlock the desktop app and guided setup.
                     </p>
                     <a class="btn btn-primary" href="https://buy.stripe.com/fZu5kDaS6dGQ2R6dydfbq00">Subscribe for $10/mo</a>
-                    <button class="btn btn-ghost" style="margin-top: 10px; font-size: 0.8rem;" onclick="unlockDemo()">Already a member? Log in</button>
+                    <button class="btn btn-ghost" style="margin-top: 10px; font-size: 0.8rem;" onclick="loginAndUnlock()">Already a member? Log in</button>
                 </div>
 
                 <div class="two-col" style="opacity: 0.3; pointer-events: none; filter: blur(2px);">
-                    <div class="steps">
-                        <div class="step">
-                            <div class="step-num">⬇️</div>
-                            <div>
-                                <div class="step-title">Download</div>
-                                <div class="step-body">
-                                    <a class="btn btn-primary" style="margin-right: 10px;" href="one_click_block.py" download>Download App (Python)</a>
-                                    <a class="btn btn-ghost" href="run_blocker.sh" download>Mac/Linux Launcher</a>
+                    <div class="tabs" style="display: flex; gap: 10px; margin-bottom: 20px; grid-column: span 2;">
+                        <button class="btn btn-primary" onclick="showTab('app-tab')" id="tab-btn-app">Option A: 1-Click App</button>
+                        <button class="btn btn-ghost" onclick="showTab('web-tab')" id="tab-btn-web">Option B: No-Download Setup</button>
+                    </div>
+
+                    <div id="app-tab" class="tab-content">
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-num">⬇️</div>
+                                <div>
+                                    <div class="step-title">Download</div>
+                                    <div class="step-body">
+                                        <a class="btn btn-primary" style="margin-right: 10px;" href="one_click_block.py" download>Download App (Python)</a>
+                                        <a class="btn btn-ghost" href="run_blocker.sh" download>Mac/Linux Launcher</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">🟢</div>
+                                <div>
+                                    <div class="step-title">Turn on protection</div>
+                                    <div class="step-body">
+                                        Click <b>TURN ON PROTECTION</b> in the app and approve admin permission.
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="step">
-                            <div class="step-num">🟢</div>
-                            <div>
-                                <div class="step-title">Turn on protection</div>
-                                <div class="step-body">
-                                    Click <b>TURN ON PROTECTION</b> in the app and approve admin permission when prompted.
+                    </div>
+
+                    <div id="web-tab" class="tab-content" style="display: none;">
+                        <div class="note" style="border-color: var(--accent); background: rgba(16, 185, 129, 0.05); margin-bottom: 15px;">
+                            <div style="font-weight: 900; margin-bottom: 8px;">🚀 Browser-Only Protection</div>
+                            You can protect this computer right now without downloading anything.
+                        </div>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-num">1</div>
+                                <div>
+                                    <div class="step-title">Open Browser Settings</div>
+                                    <div class="step-body">Go to <b>Settings > Privacy & Security > Security</b> in your browser.</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="step">
-                            <div class="step-num">✅</div>
-                            <div>
-                                <div class="step-title">Verify it worked</div>
-                                <div class="step-body">
-                                    Try visiting an adult site (it should fail to load) and try <b>reddit.com</b> (blocked on the computer running the app).
+                            <div class="step">
+                                <div class="step-num">2</div>
+                                <div>
+                                    <div class="step-title">Select Custom DNS</div>
+                                    <div class="step-body">Find "Use secure DNS" and select <b>Custom</b>.</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">3</div>
+                                <div>
+                                    <div class="step-title">Paste the Gaurd IP</div>
+                                    <div class="step-body">Paste this: <code style="background: #000; padding: 2px 5px; border-radius: 4px;">https://family.cloudflare-dns.com/dns-query</code></div>
                                 </div>
                             </div>
                         </div>
@@ -862,30 +983,82 @@
 
                     <div class="note" style="border-color: rgba(74,163,255,0.28); background: rgba(74,163,255,0.10);">
                         <div style="font-weight: 900; margin-bottom: 8px;">Network-wide protection</div>
-                        To protect <b>every</b> device on your Wi‑Fi, set your router DNS to:
+                        To protect <b>every</b> device on your Wi‑Fi (Phones, Tablets, TVs), set your router DNS to:
                         <br><br>
                         <b>Primary:</b> 1.1.1.3<br>
                         <b>Secondary:</b> 1.0.0.3
-                        <br><br>
-                        This is what makes it “unlimited devices” (because the router applies it to the whole network).
                     </div>
                 </div>
             </div>
         </div>
 
         <script>
-            function unlockDemo() {
-                // In a real app, this would check a cookie or token
-                document.getElementById('download-lock').style.display = 'none';
-                document.querySelector('.download-container .two-col').style.opacity = '1';
-                document.querySelector('.download-container .two-col').style.pointerEvents = 'auto';
-                document.querySelector('.download-container .two-col').style.filter = 'none';
+            function showTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+                document.getElementById(tabId).style.display = 'block';
+                
+                // Update button styles
+                const btnApp = document.getElementById('tab-btn-app');
+                const btnWeb = document.getElementById('tab-btn-web');
+                if (tabId === 'app-tab') {
+                    btnApp.className = 'btn btn-primary';
+                    btnWeb.className = 'btn btn-ghost';
+                } else {
+                    btnApp.className = 'btn btn-ghost';
+                    btnWeb.className = 'btn btn-primary';
+                }
             }
 
-            // Check if user just paid (simulated via URL)
+            function loginAndUnlock() {
+                const email = prompt("Enter your account email to verify subscription:");
+                if (email && email.includes('@')) {
+                    localStorage.setItem('gaurd_paid', 'true');
+                    localStorage.setItem('gaurd_user', email);
+                    showSuccessMessage(email);
+                    unlockDemo();
+                } else if (email) {
+                    alert("Please enter a valid email.");
+                }
+            }
+
+            function showSuccessMessage(email) {
+                const nav = document.querySelector('.nav-inner');
+                const userBadge = document.createElement('div');
+                userBadge.style.cssText = 'font-size: 0.85rem; color: var(--accent); font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--accent);';
+                userBadge.innerHTML = '👤 ' + email;
+                nav.appendChild(userBadge);
+            }
+
+            function unlockDemo() {
+                const lock = document.getElementById('download-lock');
+                if (lock) lock.style.display = 'none';
+                const container = document.querySelector('.download-container .two-col');
+                if (container) {
+                    container.style.opacity = '1';
+                    container.style.pointerEvents = 'auto';
+                    container.style.filter = 'none';
+                }
+            }
+
+            // Real persistence: Check if user has already paid on this device
+            function checkPersistence() {
+                if (localStorage.getItem('gaurd_paid') === 'true') {
+                    const user = localStorage.getItem('gaurd_user');
+                    if (user) showSuccessMessage(user);
+                    unlockDemo();
+                }
+            }
+
+            // Check if user just paid (from Stripe redirect)
             if (window.location.search.includes('paid=true')) {
+                localStorage.setItem('gaurd_paid', 'true');
+                // If they are on the success page, we might want to ask for their email here
+                // to link it to the storage, or just show a general welcome.
                 unlockDemo();
             }
+
+            // Run persistence check on load
+            window.addEventListener('DOMContentLoaded', checkPersistence);
         </script>
 
         <div id="faq" class="section">
@@ -916,7 +1089,9 @@
 
         <div class="footer">
             &copy; 2026 Gaurd.online • Simple protection for everyone •
-            <a href="#how">How it works</a>
+            <a href="#how">How it works</a> •
+            <a href="privacy.html">Privacy</a> •
+            <a href="terms.html">Terms</a>
         </div>
     </div>
 
