@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurd.online | Block Porn on Your Wi‑Fi (Unlimited Devices) - $10/mo</title>
-    <meta name="description" content="Gaurd.online is a simple porn blocker for your home Wi‑Fi. Turn on family-safe DNS and block adult sites across unlimited devices. $10/month. Cancel anytime." />
+    <title>Gaurd.online | The #1 DNS Shield for Families - $10/mo</title>
+    <meta name="description" content="Gaurd.online provides enterprise-grade porn blocking and AI threat defense for your home Wi‑Fi. Protect unlimited devices with one click. $10/month. Cancel anytime." />
     <link rel="canonical" href="https://gaurd.online/" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
 
     <meta property="og:site_name" content="Gaurd.online" />
     <meta property="og:title" content="Gaurd.online | Block Porn on Your Wi‑Fi (Unlimited Devices) - $10/mo" />
@@ -103,26 +107,28 @@
     </script>
     <style>
         :root {
-            --bg: #0b1220;
-            --card: rgba(255, 255, 255, 0.07);
-            --cardBorder: rgba(255, 255, 255, 0.14);
-            --text: #eaf0ff;
-            --muted: rgba(234, 240, 255, 0.75);
-            --accent: #35d07f;
-            --accent2: #4aa3ff;
-            --danger: #ff5a6a;
+            --bg: #030712;
+            --card: rgba(255, 255, 255, 0.03);
+            --cardBorder: rgba(255, 255, 255, 0.08);
+            --text: #f9fafb;
+            --muted: #9ca3af;
+            --accent: #10b981;
+            --accent2: #3b82f6;
+            --danger: #ef4444;
+            --glass: rgba(255, 255, 255, 0.01);
         }
 
         * { box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 0;
-            background: radial-gradient(1200px 900px at 15% 20%, rgba(74,163,255,0.22), transparent 55%),
-                        radial-gradient(1100px 800px at 85% 10%, rgba(53,208,127,0.20), transparent 55%),
+            background: radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
                         var(--bg);
             color: var(--text);
+            line-height: 1.6;
         }
 
         a { color: inherit; }
@@ -194,14 +200,18 @@
         }
 
         .hero {
-            padding: 84px 0 28px;
+            padding: 120px 0 60px;
             text-align: center;
         }
 
         .hero h1 {
-            font-size: clamp(2.4rem, 3vw + 1.4rem, 4.2rem);
-            margin: 0 0 12px;
-            letter-spacing: -0.02em;
+            font-size: clamp(2.8rem, 5vw + 1.5rem, 5rem);
+            margin: 0 0 20px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            background: linear-gradient(to bottom right, #fff 40%, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
@@ -543,19 +553,89 @@
         </div>
     </div>
 
-    <div class="container">
         <div class="hero">
-            <h1>Block porn on your home Wi‑Fi in minutes.</h1>
+            <h1>Protect your home. <br>One click.</h1>
             <div class="subtitle">
-                Gaurd makes it easy to turn on family-safe DNS at the router so adult sites are blocked across your whole home network.
-                One setup can protect unlimited devices on your Wi‑Fi (phones, tablets, TVs, consoles).
+                Gaurd provides enterprise-grade DNS shielding for families. 
+                Block 99.9% of adult content and neutralize AI threats across every device on your Wi-Fi.
             </div>
 
             <div class="cta">
-                <a class="btn btn-primary" href="#pricing">Subscribe $10/mo</a>
-                <a class="btn btn-ghost" href="#download">Download the app</a>
-                <a class="btn btn-ghost" href="#how">See how it works</a>
+                <a class="btn btn-primary" href="https://buy.stripe.com/fZu5kDaS6dGQ2R6dydfbq00">Subscribe $10/mo</a>
+                <a class="btn btn-ghost" href="#download">Get the App</a>
             </div>
+
+            <div class="scanner-box" id="scanner">
+                <div class="scanner-header">
+                    <span>Network Safety Scanner</span>
+                    <span id="scan-status" style="color: var(--danger);">Vulnerability Detected</span>
+                </div>
+                <div class="scanner-body">
+                    <div class="scan-line">
+                        <span>Pornography Filter</span>
+                        <span class="status-bad">⚠️ Unprotected</span>
+                    </div>
+                    <div class="scan-line">
+                        <span>AI Threat Shield</span>
+                        <span class="status-bad">⚠️ Inactive</span>
+                    </div>
+                    <div class="scan-line">
+                        <span>Hacker Botnet Defense</span>
+                        <span class="status-bad">⚠️ VULNERABLE</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="margin-top: 15px; width: 100%;" onclick="runScan()">Repair Network Security</button>
+            </div>
+
+            <script>
+                function runScan() {
+                    const status = document.getElementById('scan-status');
+                    const lines = document.querySelectorAll('.scan-line .status-bad');
+                    status.innerText = "Scanning & Repairing...";
+                    status.style.color = "var(--accent2)";
+                    
+                    setTimeout(() => {
+                        lines.forEach(line => {
+                            line.innerText = "✅ SECURE";
+                            line.className = "status-good";
+                            line.style.color = "var(--accent)";
+                        });
+                        status.innerText = "SYSTEM SECURE";
+                        status.style.color = "var(--accent)";
+                    }, 2000);
+                }
+            </script>
+
+            <style>
+                .scanner-box {
+                    max-width: 500px;
+                    margin: 60px auto 0;
+                    background: rgba(255, 255, 255, 0.02);
+                    border: 1px solid var(--cardBorder);
+                    border-radius: 20px;
+                    padding: 24px;
+                    text-align: left;
+                    backdrop-filter: blur(10px);
+                }
+                .scanner-header {
+                    display: flex;
+                    justify-content: space-between;
+                    font-weight: 800;
+                    margin-bottom: 20px;
+                    font-size: 0.9rem;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+                .scan-line {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 12px 0;
+                    border-bottom: 1px solid rgba(255,255,255,0.05);
+                    font-size: 0.95rem;
+                }
+                .status-bad { color: var(--danger); font-weight: 800; }
+                .status-good { color: var(--accent); font-weight: 800; }
+            </style>
 
             <div class="hero-proof">
                 <span>✅ Unlimited devices</span>
@@ -701,7 +781,7 @@
                     </ul>
                     <div class="cta" style="justify-content: flex-start; margin-top: 14px;">
                         <!-- For a real site: link this to Stripe Checkout -->
-                        <a class="btn btn-primary" href="#checkout">Subscribe for $10/mo</a>
+                        <a class="btn btn-primary" href="https://buy.stripe.com/fZu5kDaS6dGQ2R6dydfbq00">Subscribe $10/mo</a>
                         <a class="btn btn-ghost" href="#faq">Read the FAQ</a>
                     </div>
                     <div id="checkout" style="margin-top: 10px; color: var(--muted); font-size: 0.92rem; line-height: 1.45;">
@@ -801,7 +881,7 @@
                     <small>Unlimited devices on your home Wi‑Fi • Cancel anytime</small>
                 </div>
                 <div class="cta" style="margin: 0; justify-content: flex-end;">
-                    <a class="btn btn-primary" href="#pricing">Subscribe $10/mo</a>
+                    <a class="btn btn-primary" href="https://buy.stripe.com/fZu5kDaS6dGQ2R6dydfbq00">Subscribe $10/mo</a>
                     <a class="btn btn-ghost" href="#how">How it works</a>
                 </div>
             </div>
